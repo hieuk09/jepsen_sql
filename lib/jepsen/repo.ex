@@ -1,4 +1,4 @@
-defmodule Accounts.Repo do
+defmodule Jepsen.Repo do
   use Ecto.Repo,
     otp_app: :jepsen_sql,
     adapter: Ecto.Adapters.Postgres

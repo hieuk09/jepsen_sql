@@ -8,7 +8,7 @@ defmodule JepsenSql.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      Accounts.Repo,
+      Jepsen.Repo,
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

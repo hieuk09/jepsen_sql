@@ -2,13 +2,13 @@
 # and its dependencies with the aid of the Mix.Config module.
 use Mix.Config
 
-config :jepsen_sql, Accounts.Repo,
+config :jepsen_sql, Jepsen.Repo,
   database: "jepsen_sql_repo",
   username: 'hieunguyen',
   password: nil,
   hostname: "localhost"
 
-config :jepsen_sql, ecto_repos: [Accounts.Repo]
+config :jepsen_sql, ecto_repos: [Jepsen.Repo]
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
