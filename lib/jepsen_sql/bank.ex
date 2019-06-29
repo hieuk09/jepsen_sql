@@ -12,6 +12,8 @@ defmodule JepsenSql.Bank do
     account_id_1 = :rand.uniform(accounts_count)
     account_id_2 = :rand.uniform(accounts_count)
 
+    IO.puts("Move $10 from #{account_id_2} to #{account_id_1}")
+
     Repo.transaction(fn ->
       account_1 = Account |> Repo.get(account_id_1)
       account_2 = Account |> Repo.get(account_id_2)
