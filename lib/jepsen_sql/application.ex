@@ -9,7 +9,6 @@ defmodule JepsenSql.Application do
     # List all child processes to be supervised
     children = [
       Jepsen.Repo,
-      JepsenSql.Bank
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

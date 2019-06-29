@@ -1,27 +1,14 @@
 defmodule JepsenSql.Bank do
-  use GenServer
   alias Jepsen.Account
   alias Jepsen.Repo
 
-  @impl true
-  def init(init_arg) do
-    {:ok, init_arg}
-  end
-
-  def start_link(_opts) do
-    GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
-  end
-
-  @impl true
-  def handle_call({:populate, accounts_count, initial_balance}, _, _) do
+  def populate(accounts_count, initial_balance) do
     Repo.truncate(Account)
     accounts = generate_accounts(accounts_count, initial_balance)
-    result = Repo.insert_all(Account, accounts)
-    { :reply, result, [accounts_count, initial_balance] }
+    Repo.insert_all(Account, accounts)
   end
 
-  @impl true
-  def handle_call({:move_money, accounts_count}, _, _) do
+  def move_money(accounts_count) do
     account_id_1 = :rand.uniform(accounts_count)
     account_id_2 = :rand.uniform(accounts_count)
 
@@ -36,8 +23,6 @@ defmodule JepsenSql.Bank do
         Repo.update(changeset_2)
       end
     end)
-
-    { :reply, true, nil }
   end
 
   def generate_accounts(1, initial_balance) do
