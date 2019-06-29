@@ -15,7 +15,9 @@ defmodule JepsenSql.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {JepsenSql.Application, []}
+      mod: {
+        JepsenSql.Application, []
+      }
     ]
   end
 
