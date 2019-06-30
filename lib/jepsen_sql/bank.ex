@@ -1,6 +1,7 @@
 defmodule JepsenSql.Bank do
   alias Jepsen.Account
   alias Jepsen.Repo
+  import Ecto.Query
 
   def populate(accounts_count, initial_balance) do
     Repo.truncate(Account)
@@ -12,19 +13,26 @@ defmodule JepsenSql.Bank do
     account_id_1 = :rand.uniform(accounts_count)
     account_id_2 = :rand.uniform(accounts_count)
 
-    IO.puts("Move $10 from #{account_id_2} to #{account_id_1}")
-
     Repo.transaction(fn ->
       account_1 = Account |> Repo.get(account_id_1)
       account_2 = Account |> Repo.get(account_id_2)
 
       if account_2.balance >= 10 do
         changeset_1 = Account.changeset(account_1, %{balance: account_1.balance + 10})
-        changeset_2 = Account.changeset(account_2, %{balance: account_1.balance - 10})
-        Repo.update(changeset_1)
-        Repo.update(changeset_2)
+        changeset_2 = Account.changeset(account_2, %{balance: account_2.balance - 10})
+
+        with {:ok, _} <- Repo.update(changeset_1),
+             {:ok, _} <- Repo.update(changeset_2) do
+          {:ok}
+        else
+          val -> Repo.rollback(val)
+        end
       end
     end)
+  end
+
+  def total_balance do
+    Repo.one(from a in Account, select: sum(a.balance))
   end
 
   def generate_accounts(1, initial_balance) do
