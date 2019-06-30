@@ -9,6 +9,7 @@ config :jepsen_sql, Jepsen.Repo,
   hostname: "localhost"
 
 config :jepsen_sql, ecto_repos: [Jepsen.Repo]
+config :logger, level: :info
 
 # This configuration is loaded before any dependency and is restricted
 # to this project. If another project depends on this project, this
