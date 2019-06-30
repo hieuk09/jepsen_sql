@@ -10,8 +10,7 @@ defmodule JepsenSql.TestSupervisor do
     children = Enum.map(1..5, fn i ->
       %{
         id: "Test#{i}",
-        start: {Test, :start_link, [:work]},
-        restart: :permanent
+        start: {Test, :start_link, [:work]}
       }
     end)
 
