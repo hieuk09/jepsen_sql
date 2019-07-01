@@ -5,8 +5,10 @@ use Mix.Config
 config :jepsen_sql, Jepsen.Repo,
   database: "jepsen_sql_repo",
   username: 'hieunguyen',
-  password: nil,
-  hostname: "localhost"
+  password: 'password',
+  hostname: "localhost",
+  port: 3306,
+  show_sensitive_data_on_connection_error: true
 
 config :jepsen_sql, ecto_repos: [Jepsen.Repo]
 config :logger, level: :info

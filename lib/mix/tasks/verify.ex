@@ -15,10 +15,10 @@ defmodule Mix.Tasks.Verify do
     expected_balance = accounts_count * initial_balance
     total_balance = JepsenSql.Bank.total_balance
 
-    if total_balance != expected_balance do
-      IO.puts("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
-    else
+    if Decimal.to_integer(total_balance) == expected_balance do
       IO.puts("Great!!! All money is here")
+    else
+      IO.puts("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
     end
   end
 end

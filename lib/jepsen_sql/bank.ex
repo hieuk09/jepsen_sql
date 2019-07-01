@@ -19,6 +19,7 @@ defmodule JepsenSql.Bank do
         account_2 = Account |> Repo.get(account_id_2)
 
         if account_2.balance >= 10 do
+          IO.puts("Transfer $10 from #{account_id_1} to #{account_id_2}")
           changeset_1 = Account.changeset(account_1, %{balance: account_1.balance + 10})
           changeset_2 = Account.changeset(account_2, %{balance: account_2.balance - 10})
 
@@ -32,6 +33,7 @@ defmodule JepsenSql.Bank do
       end)
     rescue
       e in Postgrex.Error -> IO.inspect(e)
+      e in Mariaex.Error -> IO.inspect(e)
     end
   end
 
