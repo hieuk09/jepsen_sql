@@ -20,5 +20,13 @@ defmodule Mix.Tasks.Verify do
     else
       IO.puts("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
     end
+
+    negative_account_count = JepsenSql.Bank.negative_account_count
+
+    if negative_account_count == 0 do
+      IO.puts("No account with negative balance")
+    else
+      IO.puts("There are #{negative_account_count} accounts with negative balance")
+    end
   end
 end

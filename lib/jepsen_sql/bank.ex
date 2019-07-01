@@ -15,20 +15,20 @@ defmodule JepsenSql.Bank do
 
     try do
       Repo.transaction(fn ->
-        account_1 = Account |> Repo.get(account_id_1)
         account_2 = Account |> Repo.get(account_id_2)
+        transfer = random(account_2.balance)
+        negative_transfer = -transfer
 
-        if account_2.balance >= 10 do
-          IO.puts("Transfer $10 from #{account_id_1} to #{account_id_2}")
-          changeset_1 = Account.changeset(account_1, %{balance: account_1.balance + 10})
-          changeset_2 = Account.changeset(account_2, %{balance: account_2.balance - 10})
+        IO.puts("Transfer $#{transfer} from #{account_id_2} to #{account_id_1}")
+        update_1 = from(a in Account, where: [id: ^account_id_2], update: [inc: [balance: ^negative_transfer]])
+        update_2 = from(a in Account, where: [id: ^account_id_1], update: [inc: [balance: ^transfer]])
 
-          with {:ok, _} <- Repo.update(changeset_1),
-               {:ok, _} <- Repo.update(changeset_2) do
-            {:ok}
-          else
-            val -> Repo.rollback(val)
-          end
+        with {1, _} <- Repo.update_all(update_2, []),
+             {1, _} <- Repo.update_all(update_1, []) do
+          {:ok}
+        else
+          val ->
+            Repo.rollback(val)
         end
       end)
     rescue
@@ -37,8 +37,15 @@ defmodule JepsenSql.Bank do
     end
   end
 
+  def random(0), do: 0
+  def random(n), do: :rand.uniform(n)
+
   def total_balance do
     Repo.one(from a in Account, select: sum(a.balance))
+  end
+
+  def negative_account_count do
+    Repo.one(from a in Account, select: count(a.id), where: a.balance < 0)
   end
 
   def generate_accounts(1, initial_balance) do
