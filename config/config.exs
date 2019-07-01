@@ -7,8 +7,11 @@ config :jepsen_sql, Jepsen.Repo,
   username: 'hieunguyen',
   password: 'password',
   hostname: "localhost",
-  port: 3306,
-  show_sensitive_data_on_connection_error: true
+  port: 3306
+#config :jepsen_sql, Jepsen.Repo,
+  #database: "jepsen_sql_repo",
+  #username: 'hieunguyen',
+  #hostname: "localhost"
 
 config :jepsen_sql, ecto_repos: [Jepsen.Repo]
 config :logger, level: :info

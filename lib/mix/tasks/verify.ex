@@ -15,7 +15,7 @@ defmodule Mix.Tasks.Verify do
     expected_balance = accounts_count * initial_balance
     total_balance = JepsenSql.Bank.total_balance
 
-    if Decimal.to_integer(total_balance) == expected_balance do
+    if convert(total_balance) == expected_balance do
       IO.puts("Great!!! All money is here")
     else
       IO.puts("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
@@ -29,4 +29,10 @@ defmodule Mix.Tasks.Verify do
       IO.puts("There are #{negative_account_count} accounts with negative balance")
     end
   end
+
+  def convert(%Decimal{sign: sign, coef: coef, exp: exp}) do
+    Decimal.to_integer(%Decimal{sign: sign, coef: coef, exp: exp})
+  end
+
+  def convert(val), do: val
 end

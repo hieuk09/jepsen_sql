@@ -37,9 +37,6 @@ defmodule JepsenSql.Bank do
     end
   end
 
-  def random(0), do: 0
-  def random(n), do: :rand.uniform(n)
-
   def total_balance do
     Repo.one(from a in Account, select: sum(a.balance))
   end
@@ -59,4 +56,7 @@ defmodule JepsenSql.Bank do
   def generate_accounts(accounts_count, initial_balance) do
     [%{balance: initial_balance, id: accounts_count} | generate_accounts(accounts_count - 1, initial_balance)]
   end
+
+  def random(0), do: 0
+  def random(n), do: :rand.uniform(n)
 end
