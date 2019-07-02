@@ -2,6 +2,7 @@ defmodule JepsenSql.Bank do
   alias Jepsen.Account
   alias Jepsen.Repo
   import Ecto.Query
+  require Logger
 
   def populate(accounts_count, initial_balance) do
     Repo.truncate(Account)
@@ -19,7 +20,7 @@ defmodule JepsenSql.Bank do
         transfer = random(account_2.balance)
         negative_transfer = -transfer
 
-        IO.puts("Transfer $#{transfer} from #{account_id_2} to #{account_id_1}")
+        Logger.info("Transfer $#{transfer} from #{account_id_2} to #{account_id_1}")
         update_1 = from(a in Account, where: [id: ^account_id_2], update: [inc: [balance: ^negative_transfer]])
         update_2 = from(a in Account, where: [id: ^account_id_1], update: [inc: [balance: ^transfer]])
 

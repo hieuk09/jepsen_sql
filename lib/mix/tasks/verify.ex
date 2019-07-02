@@ -3,6 +3,7 @@ defmodule Mix.Tasks.Verify do
   The task that is use to verify database state after running test
   """
 
+  require Logger
   use Mix.Task
 
   @shortdoc """
@@ -16,17 +17,17 @@ defmodule Mix.Tasks.Verify do
     total_balance = JepsenSql.Bank.total_balance
 
     if convert(total_balance) == expected_balance do
-      IO.puts("Great!!! All money is here")
+      Logger.info("Great!!! All money is here", ansi_color: :green)
     else
-      IO.puts("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
+      Logger.error("Missing money!!! Expect #{expected_balance}, got #{total_balance}")
     end
 
     negative_account_count = JepsenSql.Bank.negative_account_count
 
     if negative_account_count == 0 do
-      IO.puts("No account with negative balance")
+      Logger.info("No account with negative balance", ansi_color: :green)
     else
-      IO.puts("There are #{negative_account_count} accounts with negative balance")
+      Logger.error("There are #{negative_account_count} accounts with negative balance")
     end
   end
 
