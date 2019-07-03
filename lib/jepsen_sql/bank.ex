@@ -59,5 +59,6 @@ defmodule JepsenSql.Bank do
   end
 
   def random(0), do: 0
-  def random(n), do: :rand.uniform(n)
+  def random(n) when n < 0, do: 0
+  def random(n) when n > 0, do: :rand.uniform(n)
 end

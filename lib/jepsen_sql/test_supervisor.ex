@@ -1,6 +1,6 @@
 defmodule JepsenSql.TestSupervisor do
   use Supervisor
-  alias JepsenSql.BankTest
+  alias JepsenSql.BankWorker
 
   def start_link(opts) do
     Supervisor.start_link(__MODULE__, :ok, opts)
@@ -10,7 +10,7 @@ defmodule JepsenSql.TestSupervisor do
     children = Enum.map(1..5, fn i ->
       %{
         id: "Test#{i}",
-        start: {BankTest, :start_link, [:work]}
+        start: {BankWorker, :start_link, [:work]}
       }
     end)
 

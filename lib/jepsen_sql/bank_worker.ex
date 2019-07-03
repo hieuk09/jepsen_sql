@@ -1,4 +1,4 @@
-defmodule JepsenSql.BankTest do
+defmodule JepsenSql.BankWorker do
   use GenServer
 
   def start_link(state) do
