@@ -21,6 +21,16 @@ defmodule JepsenSql.Verifier do
     end
   end
 
+  def verify_balance(account_id) do
+    amount = Bank.total_amount(account_id)
+
+    if amount < 0 do
+      raise "Total balance is negative: #{amount}"
+    else
+      Logger.info("Balance is normal", ansi_color: :green)
+    end
+  end
+
   def convert(%Decimal{sign: sign, coef: coef, exp: exp}) do
     Decimal.to_integer(%Decimal{sign: sign, coef: coef, exp: exp})
   end

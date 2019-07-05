@@ -61,4 +61,40 @@ defmodule JepsenSql.Bank do
   def random(0), do: 0
   def random(n) when n < 0, do: 0
   def random(n) when n > 0, do: :rand.uniform(n)
+
+
+  # This part is for transfer test
+
+  def update_balance(account_id) do
+    try do
+      Repo.transaction(fn ->
+        amount = total_amount(account_id)
+
+        if amount > 10 do
+          Repo.insert(%Jepsen.Transaction{amount: random(amount), account_id: account_id, type: "redeem"})
+        else
+          Repo.insert(%Jepsen.Transaction{amount: random(100), account_id: account_id, type: "accrual"})
+        end
+      end)
+    rescue
+      e in Postgrex.Error -> IO.inspect(e)
+      e in Mariaex.Error -> IO.inspect(e)
+    end
+  end
+
+  def total_amount(account_id) do
+    query = """
+    SELECT SUM(
+    CASE
+    WHEN type = 'accrual' THEN amount
+    WHEN type = 'redeem' THEN -amount
+    END
+    ) FROM transactions
+    WHERE account_id = $1
+    """
+
+    [[value | _] | _] = Ecto.Adapters.SQL.query!(Repo, query, [account_id]).rows
+
+    value || 0
+  end
 end

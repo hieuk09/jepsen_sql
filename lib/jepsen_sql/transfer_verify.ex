@@ -1,4 +1,4 @@
-defmodule JepsenSql.BankVerify do
+defmodule JepsenSql.TransferVerify do
   use GenServer
 
   def start_link(state) do
@@ -8,14 +8,14 @@ defmodule JepsenSql.BankVerify do
   @impl true
   def init(_) do
     schedule_work()
-    {:ok, [100, 100]}
+    {:ok, 1}
   end
 
   @impl true
-  def handle_info(:work, [accounts_count, initial_balance]) do
-    JepsenSql.Verifier.verify(accounts_count, initial_balance)
+  def handle_info(:work, account_id) do
+    JepsenSql.Verifier.verify_balance(account_id)
     schedule_work()
-    {:noreply, [accounts_count, initial_balance]}
+    {:noreply, account_id}
   end
 
   defp schedule_work() do
