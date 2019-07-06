@@ -83,15 +83,6 @@ defmodule JepsenSql.Bank do
   end
 
   def total_amount(account_id) do
-    #query = """
-    #SELECT SUM(
-    #CASE
-    #WHEN type = 'accrual' THEN amount
-    #WHEN type = 'redeem' THEN -amount
-    #END
-    #) FROM transactions
-    #WHERE account_id = ?
-    #"""
     query = """
     SELECT SUM(
     CASE
@@ -101,6 +92,15 @@ defmodule JepsenSql.Bank do
     ) FROM transactions
     WHERE account_id = ?
     """
+    #query = """
+    #SELECT SUM(
+    #CASE
+    #WHEN type = 'accrual' THEN amount
+    #WHEN type = 'redeem' THEN -amount
+    #END
+    #) FROM transactions
+    #WHERE account_id = $1
+    #"""
 
     [[value | _] | _] = Ecto.Adapters.SQL.query!(Repo, query, [account_id]).rows
 
